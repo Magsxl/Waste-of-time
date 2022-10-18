@@ -12,7 +12,7 @@
 ### 2. [Drugi artykuł](https://www.nature.com/articles/s41598-022-06146-2#Abs1)
   * Nature.com hohoho
   * Twórcy prawią o rozpoznawaniu medycznych odpadów (ibm u know biomed medmed, zesra się tam)
-  * Do nauki modelu wykorzystują ResNeXt
+  * Do nauki modelu wykorzystują ResNeXt, uzyskują dokładność 97.2%
 ## *Wymagania pozafunkcjonalne:*
 -
 -
