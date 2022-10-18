@@ -1,9 +1,9 @@
-# Waste-of-time
+# **Waste-of-time**
 
 ## *Analiza stanu wiedzy:*
 
 
-## Wymagania pozafunkcjonalne
+## *Wymagania pozafunkcjonalne:*
 
 
-## Wymagania funkcjonalne
+## *Wymagania funkcjonalne:*
