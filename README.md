@@ -5,20 +5,22 @@
   * Najpierw mapują obraz na siatkowej, komórkowej strukturze - macierzy, którą następnie konwertują na skalę szarości
   * Zdjęcie jest segmentowane na komórki za pomocą VGG-16, każda komórka jest przetwarza w celu wstępnego uzyskania pojedynczych śmieci w przybliżeniu
   * Następnie każda komórka jest oddzielnie przetwarzana w celu jak najdokładniejszego rozpoznania śmiecia
-  * Na każdą z kategorii wykorzystują ok. 500 zdjęć
   * Korzystają z VGG-16, czyli 16 poziomowej konwolucyjnej sieci neuronowej
-  * Liczba "epochów" (cokolwiek to jest xd) potrzebna do wytrenowania modelu to około 100 (prawdopodobnie to jakieś iteracje po zdjęciach czy coś takiego
-  * Podział śmieci na plastik, szkło, papier, metal, trash(unknown). Dzięki temu uzyskują największą dokładność wynoszącą 96.1%
-  * 
-### 2. [Drugi artykuł]
-  *
+  * Podział smieci na plastik, szkło, papier, metal, trash(unknown). Dzięki temu uzyskują największą dokładność wynoszącą 96.1%
+  * etc
+-
 ## *Wymagania pozafunkcjonalne:*
--
--
--
--
+ * aplikacja webowa - Flask/FastAPI (zdecydujemy w trakcie robienia)
+ *
+ *
+ *
+ 
 ## *Wymagania funkcjonalne:*
--
--
--
--
+    
+    * Klient WWW wysyła zdjęcie do serwera 
+    * Serwer pobiera zdjęcie i uruchamia modelu uczenia głębokiego do klasyfikacji odpadów 
+    * Serwer przesyła JSONa do klienta 
+    * Klient wyświetla zdjęcie wraz z przypisaną klasą danego odpadu 
+    * Obsługa REST i wielu klientów 
+
+
