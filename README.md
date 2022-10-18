@@ -1,6 +1,6 @@
 # Waste-of-time
 
-## Analiza stanu wiedzy
+## *Analiza stanu wiedzy:*
 
 
 ## Wymagania pozafunkcjonalne
