@@ -1,6 +1,7 @@
 # **Waste-of-time**
 
 ## *Analiza stanu wiedzy:*
+> Przykładowa uwaga
 -
 -
 -
