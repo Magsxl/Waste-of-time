@@ -12,7 +12,9 @@
 ### 2. [Drugi artykuł](https://www.nature.com/articles/s41598-022-06146-2#Abs1)
   * Nature.com hohoho
   * Twórcy prawią o rozpoznawaniu medycznych odpadów (ibm u know biomed medmed, zesra się tam)
-  * Do nauki modelu wykorzystują ResNeXt, uzyskują dokładność 97.2%
+  * Do nauki modelu wykorzystują ResNeXt 152 poziomowa sieć neuronowa oraz bazę 3480 zdjęć do trenowania, na 696 próbnych zdjęć uzyskują dokładność 97.2%
+  * Wykorzystane kategorie to: gazy, rękawiczki, worki infuzyjne, butelki infuzyjne, aparaty infuzyjne, igły do strzykawek, pincety i strzykawki
+  * Zdjęcia najpierw konwertowano do .pkl, następnie wprowadzano do treningowego modelu
 ## *Wymagania pozafunkcjonalne:*
 - aplikacja webowa: Flask/FastAPI
 -
