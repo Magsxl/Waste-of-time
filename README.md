@@ -8,8 +8,8 @@
   * Na każdą z kategorii wykorzystują ok. 500 zdjęć
   * Korzystają z VGG-16, czyli 16 poziomowej konwolucyjnej sieci neuronowej
   * Liczba epochów (powtórnych sesji trenowania) potrzebna do wytrenowania modelu to około 100 (prawdopodobnie to jakieś iteracje po zdjęciach czy coś takiego
-  * Podział śmieci na plastik, szkło, papier, metal, trash(unknown). Dzięki temu uzyskują największą dokładność wynoszącą 96.1%
   * Użyto bazy TrashNET, zawierającej zdjęcia śmieci metalowych, plastikowych, szklanych, papierowych oraz resztkowych.
+  * Przy użyciu VGG16 otrzymano 96% dokładność
 ### 2. [Drugi artykuł](https://www.nature.com/articles/s41598-022-06146-2#Abs1)
   * Nature.com hohoho
   * Twórcy prawią o rozpoznawaniu medycznych odpadów (ibm u know biomed medmed, zesra się tam)
