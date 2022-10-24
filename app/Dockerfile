@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 EXPOSE 5000
 
-COPY ./app.py /app/
+COPY app.py /app/
 
 CMD ["flask", "run"]
