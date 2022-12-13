@@ -11,7 +11,7 @@ body {
     line-height: 1.5;
     font-weight: 400;
     color: #434343;
-    background: #fff url(background.png) center center/cover repeat;
+    background: #fff;
     margin-bottom: 50px;
 }
 
