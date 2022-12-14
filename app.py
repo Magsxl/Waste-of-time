@@ -1,21 +1,20 @@
+import base64
+import io
 import os
-from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory
+from base64 import encodebytes
+import requests
+import pandas as pd
+import torch as torch
+import PIL.Image
+from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify, json
 from werkzeug.utils import secure_filename
 
+from model import ID_Model, CATEGORIES, predictions
 
 UPLOAD_FOLDER = '/photos'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-IMG_SIZE = 300
-CATEGORIES = ["cardboard","glass","metal","paper","plastic","trash"]
+ALLOWED_EXTENSIONS = {'jpg', 'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
-@app.route("/ping", methods=["GET"], strict_slashes=False)
-def app_check():
-    return app.response_class(
-        status=200, response="App is still running.", content_type="application/json"
-    )
 
 
 def allowed_file(filename):
@@ -23,7 +22,21 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route("/", methods=['GET', 'POST'])
+def get_image(image_path):
+    pil_img = PIL.Image.open(image_path, mode='r')  # reads the PIL image
+    byte_arr = io.BytesIO()
+    pil_img.save(byte_arr, format='PNG')  # convert the PIL image to byte array
+    encoded_img = encodebytes(byte_arr.getvalue()).decode('ascii')  # encode as base64
+    return encoded_img
+
+
+def decode_image(coded_image: str):
+    decoded_image = PIL.Image.open(io.BytesIO(base64.b64decode(str(coded_image))))
+    image_rgb = decoded_image.convert("RGB")
+    return image_rgb
+
+
+@app.route('/', methods=['GET', 'POST'])
 def home():
     # if request.method == 'POST':
     #     f = request.files['file']
@@ -45,42 +58,29 @@ def home():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('process_file', name=filename))
+            res = requests.post(url_for('process_file', _external=True), json={"image": get_image(
+                os.path.join(app.config['UPLOAD_FOLDER'], filename))})
+            if res.ok:
+                print(res.json())
+            return redirect(url_for('home'))
+
     return render_template('index.html')
 
 
-@app.route('/prediction/<name>', methods=['POST'])
-def process_file(name):
-    # return send_from_directory(app.config["UPLOAD_FOLDER"], name)
-    if lr:
-        try:
-            json_ = request.json
-    print(json_)
-    query = pd.get_dummies(pd.DataFrame(json_))
-    query = query.reindex(columns=rnd_columns, fill_value=0)
-    predict = list(lr.predict(query))
-    return jsonify({‘prediction’: str(predict)})except:return jsonify({‘trace’: traceback.format_exc()})
-    else:
-    print(‘Model
-    not good’)
-    return (‘Model is not good’)
+@app.route('/prediction', methods=['POST'])
+def process_file():
+    image = decode_image(request.json["image"])
+    modelResult = model.predictions(image)
 
-@app.route("/badresult", methods=["POST"], strict_slashes=False)
-def bad_result():
-    try:
-        bad_result_name = ""
-        bad_result_photo = ""
-    except KeyError:
-        return app.response_class(status=400)
-
-    if bad_result_name == "_" or bad_result_photo == "":
-        return app.response_class(status=400)
+    return app.response_class(
+        response=json.dumps(modelResult).encode("utf8"), content_type="application/json"
+    )
 
 
 if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = ID_Model(num_classes=len(CATEGORIES))
-    model.load_state_dict(torch.load('TrashRecog/model.pth', map_location=device))
+    model.load_state_dict(torch.load('model.pth', map_location=device))
     model = model.to(device)
     model.eval()
     print("Model Loading Completed")
