@@ -1,20 +1,15 @@
 import os
-import numpy as np
-import pandas as pd
 
 import albumentations as A
 import cv2
-
+import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
-from torch import device
-import torchvision
-
-from torch.utils.data import Dataset, DataLoader
 from albumentations.pytorch import ToTensorV2
-
 from efficientnet_pytorch import EfficientNet
-from PIL import Image
+from torch import device
+from torch.utils.data import Dataset, DataLoader
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))

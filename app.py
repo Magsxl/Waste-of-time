@@ -2,14 +2,13 @@ import base64
 import io
 import os
 from base64 import encodebytes
-import requests
-import pandas as pd
-import torch as torch
-import PIL.Image
-from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify, json
-from werkzeug.utils import secure_filename, send_file
 
-from model import ID_Model, CATEGORIES, predictions
+import PIL.Image
+import requests
+from flask import Flask, flash, request, redirect, url_for, render_template, json
+from werkzeug.utils import secure_filename
+
+from model import predictions
 
 UPLOAD_FOLDER = 'static/photos'
 
