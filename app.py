@@ -7,11 +7,11 @@ import pandas as pd
 import torch as torch
 import PIL.Image
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, jsonify, json
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, send_file
 
 from model import ID_Model, CATEGORIES, predictions
 
-UPLOAD_FOLDER = '/photos'
+UPLOAD_FOLDER = 'photos'
 ALLOWED_EXTENSIONS = {'jpg', 'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -38,31 +38,22 @@ def decode_image(coded_image: str):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    # if request.method == 'POST':
-    #     f = request.files['file']
-    #     f.save(secure_filename(f.filename))
-    #     return 'file uploaded successfully', app.response_class(status=200)
-    # else:
-    #     'file uploading error', app.response_class(status=400)
     if request.method == 'POST':
-        # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            res = requests.post(url_for('process_file', _external=True), json={"image": get_image(
-                os.path.join(app.config['UPLOAD_FOLDER'], filename))})
+            file.save(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), filename))
+            res = requests.post(url_for('process_file', _external=True), json={
+                "image": get_image(os.path.join(app.config['UPLOAD_FOLDER'], filename))})
             if res.ok:
-                print(res.json())
-            return redirect(url_for('home'))
+                return render_template('results.html', results=res.json(),
+                                       file=os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     return render_template('index.html')
 
@@ -70,19 +61,18 @@ def home():
 @app.route('/prediction', methods=['POST'])
 def process_file():
     image = decode_image(request.json["image"])
-    modelResult = model.predictions(image)
+    modelresult = predictions(image)
 
     return app.response_class(
-        response=json.dumps(modelResult).encode("utf8"), content_type="application/json"
+        response=json.dumps(modelresult).encode("utf8"), content_type="application/json"
     )
 
 
-if __name__ == '__main__':
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = ID_Model(num_classes=len(CATEGORIES))
-    model.load_state_dict(torch.load('model.pth', map_location=device))
-    model = model.to(device)
-    model.eval()
-    print("Model Loading Completed")
+@app.route('/photos', methods=['GET'])
+def get_image():
+    filename = request.args.get('type')
+    return send_file(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']) + filename))
 
+
+if __name__ == '__main__':
     app.run(host="localhost", port=5000)

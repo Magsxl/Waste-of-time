@@ -16,6 +16,9 @@ from albumentations.pytorch import ToTensorV2
 from efficientnet_pytorch import EfficientNet
 from PIL import Image
 
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
 IMG_SIZE = 300
 CATEGORIES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
@@ -72,8 +75,14 @@ class ID_Model(nn.Module):
         return x
 
 
-temp_df = pd.DataFrame([['temp.jpg', 0, 0, 0, 0, 0, 0]], columns=['full_path'] + CATEGORIES)
+temp_df = pd.DataFrame([[os.path.join(__location__, 'temp.jpg'), 0, 0, 0, 0, 0, 0]], columns=['full_path'] + CATEGORIES)
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model = ID_Model(num_classes=len(CATEGORIES))
+model.load_state_dict(torch.load(os.path.join(__location__, 'model.pth'), map_location=device))
+model = model.to(device)
+model.eval()
+print("Model Loading Completed")
 
 def predictions(img):
     transforms_preds = A.Compose([
@@ -82,7 +91,7 @@ def predictions(img):
         ToTensorV2(p=1.0),
     ])
     image = img
-    image.save('temp.jpg')
+    image.save(os.path.join(__location__, 'temp.jpg'))
     dataset_test = ID_Dataset(df=temp_df, transforms=transforms_preds)
     dataloader_preds = DataLoader(dataset_test, batch_size=1, shuffle=False)
 
