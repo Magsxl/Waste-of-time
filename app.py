@@ -12,6 +12,10 @@ from werkzeug.utils import secure_filename, send_file
 from model import ID_Model, CATEGORIES, predictions
 
 UPLOAD_FOLDER = 'photos'
+
+if not os.path.exists(UPLOAD_FOLDER):
+   os.makedirs(UPLOAD_FOLDER)
+
 ALLOWED_EXTENSIONS = {'jpg', 'png'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
