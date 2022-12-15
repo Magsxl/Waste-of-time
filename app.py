@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename, send_file
 
 from model import ID_Model, CATEGORIES, predictions
 
-UPLOAD_FOLDER = 'photos'
+UPLOAD_FOLDER = 'static/photos'
 
 if not os.path.exists(UPLOAD_FOLDER):
    os.makedirs(UPLOAD_FOLDER)
