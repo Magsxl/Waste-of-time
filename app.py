@@ -68,11 +68,5 @@ def process_file():
     )
 
 
-@app.route('/photos', methods=['GET'])
-def get_image():
-    filename = request.args.get('type')
-    return send_file(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']) + filename))
-
-
 if __name__ == '__main__':
     app.run(host="localhost", port=5000)
